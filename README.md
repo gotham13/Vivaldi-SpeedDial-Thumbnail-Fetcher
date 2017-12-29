@@ -13,7 +13,7 @@ The names are pretty self explanatory.
 ## CONFIGURATION  
 * pip install -r requirements.txt
 * change the values of the following varialbles in thumb_fetcher.py
-
+* Also change the values of selection and skip according to need  
 
 | Name | Description | Path |
 |------|-------------|---------|
