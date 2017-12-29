@@ -15,6 +15,11 @@ conn = sqlite3.connect(top_sites_path)
 cur = conn.cursor()
 
 
+# If True shows you the thumbnail and asks you wether you want to change or not each time
+# May not work in some systems
+show_thumbnail_mode=False
+
+
 # Make sure the names you put in following lines is exactly the same as that in speed dials
 
 selective=False
@@ -27,7 +32,7 @@ skip=['Vivaldi','Vivaldi Community']
 #selective=True
 
 # If selective is True enter the names of all speed dials you want to change the thumbnails for seperated by comma in selections
-selections=['hackerearth','hackerrank']
+selections=['codechef.com/','spoj.com']
 
 
 
@@ -45,17 +50,40 @@ def recurser(recurse_val):
                 img = Image.open(
                     BytesIO(urllib.request.urlopen('https://logo-core.clearbit.com/' + domain + '?size=440').read()))
                 img = resizeimage.resize_contain(img, [440, 360])
-                img.save('xyz.png', img.format)
-                with open('xyz.png', "rb") as bfile:
-                    s = bfile.read()
-                up_time = str(int(time.time()))
-                sql = "INSERT OR REPLACE INTO thumbnails(thumbnail,url,url_rank,title,redirects,at_top,load_completed,last_updated,last_forced) VALUES(?,?,?,?,?,?,?,?,?)"
-                cur.execute(sql, (
-                    s, "http://bookmark_thumbnail/" + str(val['id']), '-1', '',
-                    'http://bookmark_thumbnail/' + str(val['id']), '1', '1', up_time, up_time))
-                meta = {'Thumbnail': 'chrome://thumb/' + 'http://bookmark_thumbnail/' + str(val['id']) + "?" + up_time}
-                val['meta_info'] = meta
-                print("Thumbnail temporarily changed for " + val['url'])
+                if show_thumbnail_mode is False:
+                    img.save('xyz.png', img.format)
+                    with open('xyz.png', "rb") as bfile:
+                        s = bfile.read()
+                    up_time = str(int(time.time()))
+                    sql = "INSERT OR REPLACE INTO thumbnails(thumbnail,url,url_rank,title,redirects,at_top,load_completed,last_updated,last_forced) VALUES(?,?,?,?,?,?,?,?,?)"
+                    cur.execute(sql, (
+                        s, "http://bookmark_thumbnail/" + str(val['id']), '-1', '',
+                        'http://bookmark_thumbnail/' + str(val['id']), '1', '1', up_time, up_time))
+                    meta = {
+                        'Thumbnail': 'chrome://thumb/' + 'http://bookmark_thumbnail/' + str(val['id']) + "?" + up_time}
+                    val['meta_info'] = meta
+                    print("Thumbnail temporarily changed for " + val['url'])
+                else:
+                    print("Opening thumbnail for "+val['name']+"\nPlease wait while image file opens")
+                    img.show()
+                    x=input("Enter Y for changing, enter anything else for not\n")
+                    if x is 'Y' or x is'y':
+                        img.save('xyz.png', img.format)
+                        with open('xyz.png', "rb") as bfile:
+                            s = bfile.read()
+                        up_time = str(int(time.time()))
+                        sql = "INSERT OR REPLACE INTO thumbnails(thumbnail,url,url_rank,title,redirects,at_top,load_completed,last_updated,last_forced) VALUES(?,?,?,?,?,?,?,?,?)"
+                        cur.execute(sql, (
+                            s, "http://bookmark_thumbnail/" + str(val['id']), '-1', '',
+                            'http://bookmark_thumbnail/' + str(val['id']), '1', '1', up_time, up_time))
+                        meta = {
+                            'Thumbnail': 'chrome://thumb/' + 'http://bookmark_thumbnail/' + str(
+                                val['id']) + "?" + up_time}
+                        val['meta_info'] = meta
+                        print("Thumbnail temporarily changed for " + val['url'])
+                    else:
+                        print("Thumbnail not changed")
+
             except:
                 print("Sorry could not load thumbnail for " + val['url'])
         else:
