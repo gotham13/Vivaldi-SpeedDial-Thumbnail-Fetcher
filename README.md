@@ -13,6 +13,7 @@ The names are pretty self explanatory.
 ## CONFIGURATION  
 * pip install -r requirements.txt
 * change the values of the following varialbles in thumb_fetcher.py
+* You can change show_thumbnail_mode to True for showing the thumbnails before asking to change or not  
 * Also change the values of selection and skip according to need  
 
 | Name | Description | Path |
@@ -28,6 +29,10 @@ The names are pretty self explanatory.
 ## RUNNING THE SCRIPT
 * Close all instances of vivaldi before running the script
 * The original files will be backed up in the working directory of the script
+
+## PLEASE NOTE
+The thumbnails fetched are twitter thumbnails for the given site. So images might be incorrect in certain cases. As favicons are very small this is the best option right now. Please dont bash me for this.
+
 
 ## EXAMPLE
 ### BEFORE
