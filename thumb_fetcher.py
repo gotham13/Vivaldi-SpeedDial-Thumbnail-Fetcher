@@ -14,9 +14,31 @@ top_sites_path="C:/Users/Gotham/AppData/Local/Vivaldi/User Data/Default/Top Site
 conn = sqlite3.connect(top_sites_path)
 cur = conn.cursor()
 
+# Make sure the names you put in following lines is exactly the same as that in speed dials
+
+selective=False
+# Enter the names of speed dials you want to skip changing the thumbnail, seperated by comma
+skip=['Vivaldi','Vivaldi Community']
+
+# Uncomment next line if you want to change thumbnails of only selective speeddials
+
+#selective=True
+
+
+# If selective is true enter the names of all speed dials
+selections=['hackerearth','hackerrank']
+
+
+
 def recurser(recurse_val):
     for val in recurse_val:
         if not 'children' in val:
+            if selective is False and val['name'] in skip:
+                print (val['name'] + " found in skip so skipping")
+                continue
+            if selective is True and val['name'] not in selections:
+                print(val['name']+" not found in selections")
+                continue
             domain = "{0.scheme}://{0.netloc}/".format(urlsplit(val['url']))
             try:
                 img = Image.open(
@@ -46,10 +68,10 @@ def change_thumb():
     speeddial = bookmarks["roots"]["bookmark_bar"]["children"][0]["children"]
     recurser(speeddial)
     try:
-        with open(bookmark_path, 'w') as bmk:
-            json.dump(bookmarks, bmk)
         conn.commit()
         conn.close()
+        with open(bookmark_path, 'w') as bmk:
+            json.dump(bookmarks, bmk)
         print("All changes commited")
     except:
         print("There was an error. Kindly close all instances of vivaldi if open. All changes reverted")
