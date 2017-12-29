@@ -14,18 +14,19 @@ top_sites_path="C:/Users/Gotham/AppData/Local/Vivaldi/User Data/Default/Top Site
 conn = sqlite3.connect(top_sites_path)
 cur = conn.cursor()
 
+
 # Make sure the names you put in following lines is exactly the same as that in speed dials
 
 selective=False
 # Enter the names of speed dials you want to skip changing the thumbnail, seperated by comma
+# if there is no such speed dial just leave it blank
 skip=['Vivaldi','Vivaldi Community']
 
-# Uncomment next line if you want to change thumbnails of only selective speeddials
+# Uncomment next line if you want to change thumbnails of only selective speeddials (Backspace the #)
 
 #selective=True
 
-
-# If selective is true enter the names of all speed dials
+# If selective is True enter the names of all speed dials you want to change the thumbnails for seperated by comma in selections
 selections=['hackerearth','hackerrank']
 
 
