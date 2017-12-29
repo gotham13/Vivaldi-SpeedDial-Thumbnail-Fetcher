@@ -18,8 +18,8 @@ The names are pretty self explanatory.
 
 | Name | Description | Path |
 |------|-------------|---------|
-| `top_sites_path` | Stores the path to the "Top Sites" file of Vivaldi which stores the thumbnails. | Windows: `C:/Users/<User>/AppData/Local/Vivaldi/User Data/Default/Top Sites` <br/> OS X: `/Users/<User>/Library/Application Support/Vivaldi/Default/Top Sites` |
-| `bookmark_path` | Stores the path to the "Bookmark" file of Vivaldi which stores among other things the bookmark id and its name. | Windows: `C:/Users/<User>/AppData/Local/Vivaldi/User Data/Default/Bookmarks` <br/> OS X: `/Users/<User>/Library/Application Support/Vivaldi/Default/Bookmarks` |
+| `top_sites_path` | Stores the path to the "Top Sites" file of Vivaldi which stores the thumbnails. | Windows: `C:/Users/<User>/AppData/Local/Vivaldi/User Data/Default/Top Sites` <br/> OS X: `/Users/<User>/Library/Application Support/Vivaldi/Default/Top Sites` <br/> Linux: `/home/<User>/.config/vivaldi-snapshot/Default/Top Sites` |
+| `bookmark_path` | Stores the path to the "Bookmark" file of Vivaldi which stores among other things the bookmark id and its name. | Windows: `C:/Users/<User>/AppData/Local/Vivaldi/User Data/Default/Bookmarks` <br/> OS X: `/Users/<User>/Library/Application Support/Vivaldi/Default/Bookmarks` <br/> Linux: `/home/<User>/.config/vivaldi-snapshot/Default/Bookmarks` |
 
 **Important:**
 
