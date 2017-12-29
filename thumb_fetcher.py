@@ -45,6 +45,7 @@ def recurser(recurse_val):
             if selective is True and val['name'] not in selections:
                 print(val['name']+" not found in selections")
                 continue
+
             domain = "{0.scheme}://{0.netloc}/".format(urlsplit(val['url']))
             try:
                 img = Image.open(
@@ -94,8 +95,12 @@ def recurser(recurse_val):
 def change_thumb():
     with open(bookmark_path, encoding="UTF-8") as jfile:
         bookmarks = json.load(jfile)
-    speeddial = bookmarks["roots"]["bookmark_bar"]["children"][0]["children"]
-    recurser(speeddial)
+    bookmark_bar_contents = bookmarks["roots"]["bookmark_bar"]["children"]
+    for i in bookmark_bar_contents:
+        if 'meta_info' in i:
+            if 'Speeddial' in i['meta_info']:
+                if i['meta_info']['Speeddial']=='true':
+                    recurser(i['children'])
     try:
         conn.commit()
         conn.close()
@@ -104,7 +109,6 @@ def change_thumb():
         print("All changes commited")
     except:
         print("There was an error. Kindly close all instances of vivaldi if open. All changes reverted")
-
 
 
 def startup():
