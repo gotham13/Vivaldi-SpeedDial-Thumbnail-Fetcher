@@ -28,7 +28,7 @@ selective=False
 skip=['Vivaldi','Vivaldi Community']
 
 # Uncomment next line if you want to change thumbnails of only selective speeddials (Backspace the #)
- 
+
 #selective=True
 
 # If selective is True enter the names of all speed dials you want to change the thumbnails for seperated by comma in selections
@@ -38,6 +38,7 @@ selections=['codechef.com/','spoj.com']
 
 def recurser(recurse_val):
     for val in recurse_val:
+        # if 'children' tag not present then it is not a folder
         if not 'children' in val:
             if selective is False and val['name'] in skip:
                 print (val['name'] + " found in skip so skipping")
@@ -88,6 +89,7 @@ def recurser(recurse_val):
             except:
                 print("Sorry could not load thumbnail for " + val['url'])
         else:
+            # if it is a folder then recursing
             if len(val['children'])!=0:
                 recurser(val['children'])
 
@@ -96,12 +98,14 @@ def change_thumb():
     with open(bookmark_path, encoding="UTF-8") as jfile:
         bookmarks = json.load(jfile)
     bookmark_bar_contents = bookmarks["roots"]["bookmark_bar"]["children"]
+    #checking if bookmark content is an Active speeddial or not
     for i in bookmark_bar_contents:
         if 'meta_info' in i:
             if 'Speeddial' in i['meta_info']:
                 if i['meta_info']['Speeddial']=='true':
                     recurser(i['children'])
     try:
+        #commiting changes
         conn.commit()
         conn.close()
         with open(bookmark_path, 'w') as bmk:
