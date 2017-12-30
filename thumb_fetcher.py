@@ -28,7 +28,7 @@ selective=False
 skip=['Vivaldi','Vivaldi Community']
 
 # Uncomment next line if you want to change thumbnails of only selective speeddials (Backspace the #)
-
+ 
 #selective=True
 
 # If selective is True enter the names of all speed dials you want to change the thumbnails for seperated by comma in selections
