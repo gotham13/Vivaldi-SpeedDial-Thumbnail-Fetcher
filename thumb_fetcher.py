@@ -35,10 +35,9 @@ skip=['Vivaldi','Vivaldi Community']
 selections=['codechef.com/','spoj.com']
 
 
-#Function for recursing into folders or folders inside folders
+
 def recurser(recurse_val):
     for val in recurse_val:
-        # if 'children' tag is not present then it is not a folder
         if not 'children' in val:
             if selective is False and val['name'] in skip:
                 print (val['name'] + " found in skip so skipping")
@@ -49,7 +48,6 @@ def recurser(recurse_val):
 
             domain = "{0.scheme}://{0.netloc}/".format(urlsplit(val['url']))
             try:
-                #fetching logo
                 img = Image.open(
                     BytesIO(urllib.request.urlopen('https://logo-core.clearbit.com/' + domain + '?size=440').read()))
                 img = resizeimage.resize_contain(img, [440, 360])
@@ -90,7 +88,6 @@ def recurser(recurse_val):
             except:
                 print("Sorry could not load thumbnail for " + val['url'])
         else:
-            #recurse into folder
             if len(val['children'])!=0:
                 recurser(val['children'])
 
@@ -99,15 +96,12 @@ def change_thumb():
     with open(bookmark_path, encoding="UTF-8") as jfile:
         bookmarks = json.load(jfile)
     bookmark_bar_contents = bookmarks["roots"]["bookmark_bar"]["children"]
-
-    #Checking wether the bookmark content is an non trashed speed dial folder
     for i in bookmark_bar_contents:
         if 'meta_info' in i:
             if 'Speeddial' in i['meta_info']:
                 if i['meta_info']['Speeddial']=='true':
                     recurser(i['children'])
     try:
-        #commiting changes
         conn.commit()
         conn.close()
         with open(bookmark_path, 'w') as bmk:
@@ -123,7 +117,6 @@ def startup():
     elif not os.path.isfile(top_sites_path):
         print("Top Sites file not found at the defined path " + top_sites_path)
     else:
-        #making backup of both files
         shutil.copy(bookmark_path,os.getcwd())
         shutil.copy(top_sites_path,os.getcwd())
         change_thumb()
