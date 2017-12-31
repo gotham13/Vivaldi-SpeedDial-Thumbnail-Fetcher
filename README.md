@@ -1,6 +1,7 @@
 # Vivaldi-SpeedDial-Thumbnail-Fetcher
-Automatically fetches and changes the thumbnail of sites in Vivaldi's speed dial
-The names are pretty self explanatory.
+Automatically fetches and changes the thumbnail of sites in Vivaldi's speed dial.  
+vivaldi forum link  
+https://forum.vivaldi.net/topic/23414/an-automatic-logo-thumbnail-fetcher-and-changer-for-vivaldi-speeddial
 
 
 ## PREREQUISITES
