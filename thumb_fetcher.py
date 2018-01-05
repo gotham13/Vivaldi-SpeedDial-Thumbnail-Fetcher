@@ -1,5 +1,6 @@
 from urllib.parse import urlsplit
 import json
+import base64
 import sqlite3
 import time
 import shutil
@@ -11,13 +12,15 @@ from io import BytesIO
 
 bookmark_path="C:/Users/Gotham/AppData/Local/Vivaldi/User Data/Default/Bookmarks"
 top_sites_path="C:/Users/Gotham/AppData/Local/Vivaldi/User Data/Default/Top Sites"
-conn = sqlite3.connect(top_sites_path)
-cur = conn.cursor()
 
 
 # If True shows you the thumbnail and asks you wether you want to change or not each time
 # May not work in some systems
 show_thumbnail_mode=False
+
+
+# If True downloaded thumbnails will be embedded into bookmarks file
+embed_thumbnails=False
 
 
 # Make sure the names you put in following lines is exactly the same as that in speed dials
@@ -61,8 +64,11 @@ def recurser(recurse_val):
                     cur.execute(sql, (
                         s, "http://bookmark_thumbnail/" + str(val['id']), '-1', '',
                         'http://bookmark_thumbnail/' + str(val['id']), '1', '1', up_time, up_time))
-                    meta = {
-                        'Thumbnail': 'chrome://thumb/' + 'http://bookmark_thumbnail/' + str(val['id']) + "?" + up_time}
+                    if embed_thumbnails:
+                         meta = {'Thumbnail': '' + encode_thumb('xyz.png')}
+                    else:
+                        meta = {
+                            'Thumbnail': 'chrome://thumb/' + 'http://bookmark_thumbnail/' + str(val['id']) + "?" + up_time}
                     val['meta_info'] = meta
                     print("Thumbnail temporarily changed for " + val['url'])
                 else:
@@ -78,9 +84,12 @@ def recurser(recurse_val):
                         cur.execute(sql, (
                             s, "http://bookmark_thumbnail/" + str(val['id']), '-1', '',
                             'http://bookmark_thumbnail/' + str(val['id']), '1', '1', up_time, up_time))
-                        meta = {
-                            'Thumbnail': 'chrome://thumb/' + 'http://bookmark_thumbnail/' + str(
-                                val['id']) + "?" + up_time}
+                        if embed_thumbnails:
+                            meta = {'Thumbnail': '' + encode_thumb('xyz.png')}
+                        else:
+                            meta = {
+                                'Thumbnail': 'chrome://thumb/' + 'http://bookmark_thumbnail/' + str(
+                                    val['id']) + "?" + up_time}
                         val['meta_info'] = meta
                         print("Thumbnail temporarily changed for " + val['url'])
                     else:
@@ -92,6 +101,13 @@ def recurser(recurse_val):
             # if it is a folder then recursing
             if len(val['children'])!=0:
                 recurser(val['children'])
+
+def encode_thumb(filename):
+    with open(filename, 'rb') as thumbnail_file: # open binary file in read mode
+        image_read = thumbnail_file.read()
+    image_64_encode = base64.encodebytes(image_read)
+    result = image_64_encode.decode().replace('\n', '')
+    return ''.join(['data:image/png;base64,', result])
 
 
 def change_thumb():
@@ -115,17 +131,24 @@ def change_thumb():
         print("There was an error. Kindly close all instances of vivaldi if open. All changes reverted")
 
 
+def cleanup():
+    if os.path.isfile('xyz.png'):
+        os.remove('xyz.png')
+
+
 def startup():
     if not os.path.isfile(bookmark_path):
-        print("Bookmark file not found at the defined path "+bookmark_path)
+        print("Bookmark file not found at the defined path " + bookmark_path)
     elif not os.path.isfile(top_sites_path):
         print("Top Sites file not found at the defined path " + top_sites_path)
     else:
+        global conn,cur
+        conn = sqlite3.connect(top_sites_path)
+        cur = conn.cursor()
         shutil.copy(bookmark_path,os.getcwd())
         shutil.copy(top_sites_path,os.getcwd())
         change_thumb()
-        if os.path.isfile('xyz.png'):
-            os.remove('xyz.png')
+        cleanup()
         print("Done")
 
 if __name__ == '__main__':
