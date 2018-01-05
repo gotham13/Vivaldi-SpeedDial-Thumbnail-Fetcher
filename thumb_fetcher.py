@@ -1,5 +1,6 @@
 from urllib.parse import urlsplit
 import json
+import base64
 import sqlite3
 import time
 import shutil
@@ -11,8 +12,6 @@ from io import BytesIO
 
 bookmark_path="C:/Users/Gotham/AppData/Local/Vivaldi/User Data/Default/Bookmarks"
 top_sites_path="C:/Users/Gotham/AppData/Local/Vivaldi/User Data/Default/Top Sites"
-conn = sqlite3.connect(top_sites_path)
-cur = conn.cursor()
 
 
 # If True shows you the thumbnail and asks you wether you want to change or not each time
@@ -104,10 +103,9 @@ def recurser(recurse_val):
                 recurser(val['children'])
 
 def encode_thumb(filename):
-    import base64 
-    thumbnail_file = open(filename, 'rb')   # open binary file in read mode
-    image_read = thumbnail_file.read()
-    image_64_encode = base64.encodestring(image_read)
+    with open(filename, 'rb') as thumbnail_file: # open binary file in read mode
+        image_read = thumbnail_file.read()
+    image_64_encode = base64.encodebytes(image_read)
     result = image_64_encode.decode().replace('\n', '')
     return ''.join(['data:image/png;base64,', result])
 
@@ -144,6 +142,9 @@ def startup():
     elif not os.path.isfile(top_sites_path):
         print("Top Sites file not found at the defined path " + top_sites_path)
     else:
+        global conn,cur
+        conn = sqlite3.connect(top_sites_path)
+        cur = conn.cursor()
         shutil.copy(bookmark_path,os.getcwd())
         shutil.copy(top_sites_path,os.getcwd())
         change_thumb()
